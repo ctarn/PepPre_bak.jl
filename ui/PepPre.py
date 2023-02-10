@@ -1,6 +1,6 @@
 import ctypes
-import os
 import json
+import os
 from pathlib import Path
 import platform
 import subprocess
@@ -8,9 +8,14 @@ import sys
 import threading
 import tkinter as tk
 from tkinter import ttk, filedialog, scrolledtext
+from urllib import request
 
-version = "0.0.1"
-copyright = f"PepPre {version}\nCopyright © 2023 Tarn Yeong Ching\nhttp://ctarn.io"
+version = "0.1.0"
+copyright = f"PepPre {version}\nCopyright © 2023 Tarn Yeong Ching\nhttp://peppre.ctarn.io"
+try:
+    headline = request.urlopen(f"http://peppre.ctarn.io/api/{version}/headline").read().decode("utf-8")
+except:
+    headline = ""
 
 is_linux = platform.system() == "Linux"
 is_darwin = platform.system() == "Darwin"
@@ -186,84 +191,88 @@ main = ttk.Frame(win)
 main.grid(column=0, row=0, padx=16, pady=8)
 vars = {k: v["type"](value=v["value"]) for k, v in vars_spec.items()}
 
-row=0
+row = 0
+if len(headline) > 0:
+    ttk.Label(main, text=headline, justify="center").grid(column=0, row=row, columnspan=3)
+    row += 1
+
 ttk.Label(main, text="PepPre:").grid(column=0, row=row, sticky="W")
 ttk.Entry(main, textvariable=vars["peppre"]).grid(column=1, row=row, sticky="WE")
 ttk.Button(main, text="Select", command=do_select_peppre).grid(column=2, row=row, sticky="W")
+row += 1
 
 if is_windows:
-    row += 1
     ttk.Label(main, text="MsConvert:").grid(column=0, row=row, sticky="W")
     ttk.Entry(main, textvariable=vars["msconvert"]).grid(column=1, row=row, sticky="WE")
     ttk.Button(main, text="Select", command=do_select_msconvert).grid(column=2, row=row, sticky="W")
+    row += 1
 
-row += 1
 ttk.Label(main, text="Model:").grid(column=0, row=row, sticky="W")
 ttk.Entry(main, textvariable=vars["model"]).grid(column=1, row=row, sticky="WE")
 ttk.Button(main, text="Select", command=do_select_model).grid(column=2, row=row, sticky="W")
-
 row += 1
+
 ttk.Label(main, text="Data:").grid(column=0, row=row, sticky="W")
 ttk.Entry(main, textvariable=vars["data"]).grid(column=1, row=row, sticky="WE")
 ttk.Button(main, text="Select", command=do_select_data).grid(column=2, row=row, sticky="W")
-
 row += 1
+
 ttk.Label(main, text="Exclusion Threshold:").grid(column=0, row=row, sticky="W")
 ttk.Entry(main, textvariable=vars["exclusion"]).grid(column=1, row=row, sticky="WE")
-
 row += 1
+
 ttk.Label(main, text="Mass Error:").grid(column=0, row=row, sticky="W")
 ttk.Entry(main, textvariable=vars["error"]).grid(column=1, row=row, sticky="WE")
 ttk.Label(main, text="ppm").grid(column=2, row=row, sticky="W")
-
 row += 1
+
 ttk.Label(main, text="Isolation Width:").grid(column=0, row=row, sticky="W")
 ttk.Entry(main, textvariable=vars["width"]).grid(column=1, row=row, sticky="WE")
 ttk.Label(main, text="Th").grid(column=2, row=row, sticky="W")
-
 row += 1
+
 ttk.Label(main, text="Charge Range:").grid(column=0, row=row, sticky="W")
 frm_charge = ttk.Frame(main)
 frm_charge.grid(column=1, row=row, sticky="WE")
 ttk.Entry(frm_charge, textvariable=vars["charge_min"]).grid(column=0, row=0, sticky="WE")
 ttk.Label(frm_charge, text=" - ").grid(column=1, row=0, sticky="WE")
 ttk.Entry(frm_charge, textvariable=vars["charge_max"]).grid(column=2, row=0, sticky="WE")
-
 row += 1
+
 ttk.Label(main, text="Precursor Number:").grid(column=0, row=row, sticky="W")
 ttk.Entry(main, textvariable=vars["fold"]).grid(column=1, row=row, sticky="WE")
 ttk.Label(main, text="fold").grid(column=2, row=row, sticky="W")
-
 row += 1
+
 ttk.Label(main, text="Original Precursor:").grid(column=0, row=row, sticky="W")
 ttk.Checkbutton(main, text="Preserve", variable=vars["preserve"]).grid(column=1, row=row)
-
 row += 1
+
 ttk.Label(main, text="Output Format:").grid(column=0, row=row, sticky="W")
 frm_format = ttk.Frame(main)
 frm_format.grid(column=1, row=row)
 for i, fmt in enumerate(fmts):
     ttk.Checkbutton(frm_format, text=fmt.upper(), variable=vars[f"fmt_{fmt}"]).grid(column=i, row=0)
-
 row += 1
+
 ttk.Label(main, text="Output Directory:").grid(column=0, row=row, sticky="W")
 ttk.Entry(main, textvariable=vars["out"]).grid(column=1, row=row, sticky="WE")
 ttk.Button(main, text="Select", command=do_select_out).grid(column=2, row=row, sticky="W")
-
 row += 1
+
 frm_btn = ttk.Frame(main)
 frm_btn.grid(column=0, row=row, columnspan=3)
 ttk.Button(frm_btn, text="Load Task", command=do_load).grid(column=0, row=0, padx=16, pady=8)
 ttk.Button(frm_btn, text="Save Task", command=do_save).grid(column=1, row=0, padx=16, pady=8)
 btn_run = ttk.Button(frm_btn, text="Save & Run", command=lambda: threading.Thread(target=do_run).start())
 btn_run.grid(column=2, row=0, padx=16, pady=8)
-
 row += 1
+
 console = scrolledtext.ScrolledText(main, height=16)
 console.config(state="disabled")
 console.grid(column=0, row=row, columnspan=3)
-
 row += 1
+
 ttk.Label(main, text=copyright, justify="center").grid(column=0, row=row, columnspan=3)
 
 sys.stdout = Console(console)
