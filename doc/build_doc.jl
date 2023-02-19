@@ -1,9 +1,4 @@
 import Documenter
 
 Documenter.makedocs(sitename="PepPre")
-Documenter.deploydocs(
-    repo="github.com/ctarn/PepPre_bak.jl.git",
-    dirname="doc",
-    devurl="dev",
-    versions=["stable" => "v^", "v#.#", devurl=>devurl],
-)
+Documenter.deploydocs(repo="github.com/ctarn/PepPre_bak.jl.git", dirname="doc")
