@@ -1,14 +1,20 @@
+import LibGit2
+
 import Documenter
+
+repo = "github.com/ctarn/PepPre_bak.jl.git"
 
 root = "doc"
 out = joinpath(root, "build")
-mkpath(out)
+
+rm(out; force=true, recursive=true)
+LibGit2.clone("https://$(repo)", out, branch="gh-pages")
+
 for file in ["index.html", "CNAME"]
     cp(joinpath(root, file), joinpath(out, file); force=true)
 end
 
 versions = readdir(joinpath(root, "log")) .|> VersionNumber
-print(maximum(versions))
 for v in versions
     dir = joinpath(out, "api", string(v))
     mkpath(dir)
@@ -21,4 +27,4 @@ for v in versions
     end
 end
 
-Documenter.deploydocs(repo="github.com/ctarn/PepPre_bak.jl.git", versions=nothing)
+Documenter.deploydocs(repo=repo, versions=nothing)
