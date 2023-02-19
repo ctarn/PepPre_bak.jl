@@ -9,6 +9,7 @@ out = joinpath(root, "build")
 
 rm(out; force=true, recursive=true)
 LibGit2.clone("https://$(repo)", out, branch="gh-pages")
+rm(joinpath(out, ".git"); force=true, recursive=true)
 
 for file in ["index.html", "CNAME"]
     cp(joinpath(root, file), joinpath(out, file); force=true)
