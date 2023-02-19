@@ -1,4 +1,4 @@
-name: website
+name: document
 
 on:
   push:
@@ -17,12 +17,12 @@ jobs:
         with:
           version: '1.6'
       - name: Install dependencies
-        run: julia --project=html html/deps.jl
+        run: julia --project=doc doc/deps.jl
       - name: Build and deploy site
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: julia --project=html html/build_site.jl
-      - name: Build and deploy web
+        run: julia --project=doc doc/build_site.jl
+      - name: Build and deploy doc
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: julia --project=html html/build_doc.jl
+        run: julia --project=doc doc/build_doc.jl
