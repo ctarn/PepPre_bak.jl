@@ -4,7 +4,7 @@ import Documenter
 
 repo = "github.com/ctarn/PepPre_bak.jl.git"
 
-root = "doc"
+root = "html"
 out = joinpath(root, "build")
 
 rm(out; force=true, recursive=true)
