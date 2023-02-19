@@ -21,4 +21,5 @@ jobs:
       - name: Build and deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: julia --project=doc/ doc/build.jl
+        run: julia --project=doc/ doc/build_site.jl
+        run: julia --project=doc/ doc/build_doc.jl
