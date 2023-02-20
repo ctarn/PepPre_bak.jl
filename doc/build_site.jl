@@ -18,7 +18,7 @@ end
 versions = readdir(joinpath(root, "log")) .|> VersionNumber
 sort!(versions; rev=true)
 logs = map(versions) do v in
-    return "<li> version $(v):<div>$(read(joinpath(root, "log", string(v)), String))</div></li>"
+    return "<li> version $(v)-pre:<div>$(read(joinpath(root, "log", string(v)), String))</div></li>"
 end
 
 html = read(joinpath(root, "index.html"), String)
